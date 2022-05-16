@@ -1,0 +1,13 @@
+#How much better the child horse is, 1.05 is 5% better 
+SpeedPercent: 1.05
+JumpPercent: 1.05
+HeartsPercent: 1.05
+
+#minimum and maximum speed, vanilla values are between 0.1125 and 0.3375
+MaxSpeed: 0.35
+
+MaxHearts: 40
+#mojang max is 2
+MaxJump: 0.6
+#consume the book for checking stats 
+ConsumeBook: true

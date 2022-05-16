@@ -1,4 +1,9 @@
-name: CrunchHorseBreeding
+name: CrunchBetterBreeding
 main: betterHorseCore.BreedingCore
 version: 1.0
 api-version: 1.18
+commands:
+    HorsesReload:
+        description: Perms to reload horses
+        default: false
+        usage: HorsesReload
