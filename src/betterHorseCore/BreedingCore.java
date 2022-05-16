@@ -8,6 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mule;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.event.EventHandler;
@@ -50,11 +51,12 @@ public class BreedingCore extends JavaPlugin {
 	                    if (meta.getCustomModelData() == 9001) {
 	                        if (player.getVehicle() != null && player.getVehicle().getType() == EntityType.HORSE) {
 	                            //set damage here
-	                            
+	                          
 	                        }
 	                        else {
 	                            event.setDamage(0);
 	                            event.setCancelled(true);
+	                            
 	                        }
 	                    }
 	                }
@@ -65,17 +67,22 @@ public class BreedingCore extends JavaPlugin {
 
 			Player player = event.getPlayer();
 
-			if (event.getRightClicked() instanceof Horse){
+			if (event.getRightClicked() instanceof Horse || event.getRightClicked() instanceof Mule){
 				ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
 				if (itemInHand == null) {
 					return;
 				}
+				LivingEntity horse = (LivingEntity) event.getRightClicked();
+				double jump = horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue();
+				if (jump > 0.3) {
+					horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(0.3);
+				}
 				if (itemInHand.getType() == Material.BOOK) {
-					LivingEntity horse = (LivingEntity) event.getRightClicked();
+					
 					double speed = horse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue();
 					double health = horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-					double jump = horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue();
+					
 					DecimalFormat df = new DecimalFormat("#.##");
 					player.sendMessage("Speed: " + df.format(speed));
 					player.sendMessage("Health: " +  df.format(health));
@@ -94,10 +101,16 @@ public class BreedingCore extends JavaPlugin {
 			if (dad.getType() != EntityType.HORSE) {
 				return;
 			}
-
+			
+			
+			
 			LivingEntity mom = event.getMother();
 			LivingEntity child = event.getEntity();
 
+			if (child instanceof Mule) {
+				return;
+			}
+			
 			double DadHealth = dad.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
 			double DadJump = dad.getAttribute(Attribute.HORSE_JUMP_STRENGTH).getBaseValue();
 			double DadSpeed = dad.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue();
@@ -121,8 +134,8 @@ public class BreedingCore extends JavaPlugin {
 			if (newSpeed >= 0.35) {
 				newSpeed = 0.35;
 			}
-			if (newJump >= 2) {
-				newJump = 2;
+			if (newJump >= 0.3) {
+				newJump = 0.3;
 			}
 
 			child.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
